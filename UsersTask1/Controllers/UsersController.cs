@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using UserTask1.Module;
 using UserTask1.Repo;
@@ -15,6 +16,7 @@ namespace UserTask1.Controllers
             _users = users;
         }
 
+        [Authorize(Roles = ("Admin"))]
         [HttpGet]
         public ActionResult<List<Users>> GetALL()
         {

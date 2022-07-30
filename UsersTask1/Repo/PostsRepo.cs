@@ -10,10 +10,10 @@ namespace UserTask1.Repo
 
         }
 
-        //public new List<Posts>? GetAll()
-        //{
-        //    return _context.Posts.Include(c => c.users).ToList();
-        //}
+        public new List<Posts>? GetAll()
+        {
+            return _context.Posts.Include(c => c.users).ToList();
+        }
 
     }
 }

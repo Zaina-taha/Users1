@@ -2,6 +2,8 @@
 using UserTask1.Module;
 using UserTask1.Repo;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using UsersTask1;
 
 namespace UserTask1.Controllers
 {
@@ -9,12 +11,13 @@ namespace UserTask1.Controllers
     [ApiController]
     public class PostsController : ControllerBase
     {
+       
+
         public IPosts _posts;
         public PostsController(IPosts posts)
         {
             _posts = posts;
         }
-
         [HttpGet]
         public ActionResult<List<Posts>> GetALL()
         {

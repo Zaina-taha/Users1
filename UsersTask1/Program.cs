@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using UsersTask1.Extensions;
 using UserTask1;
 using UserTask1.Module;
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<UsersContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConStr"));
+    
 
 });
 
@@ -19,6 +21,7 @@ builder.Services.InitServices();
 
 
 var app = builder.Build();
+app.UseExceptionHandlerMiddleware();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
