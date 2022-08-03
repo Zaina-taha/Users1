@@ -1,62 +1,61 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using UsersTask1.Extensions;
+using UsersTask1.models;
 using UserTask1.Module;
 using UserTask1.Repo;
 
 namespace UserTask1.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
         public IUsers _users;
-        public UsersController(IUsers users)
+        private readonly IMapper _mapper;
+        public UsersController(IUsers users, IMapper mapper)
         {
+            _mapper = mapper;
             _users = users;
         }
 
-        [Authorize(Roles = ("Admin"))]
         [HttpGet]
-        public ActionResult<List<Users>> GetALL()
+        //[XSampleActionFilter]
+        public async Task<ActionResult<List<UserVM>>> GetALL()
         {
-            return _users.GetAll();
+
+            return await _users.GetAll<UserVM>();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Users> Get(int id)
+        public async Task<ActionResult<UserVM>> Get(int id)
         {
-            var user = _users.Get(id);
-            if (user == null)
+            var UU = _users.Get<UserVM>(id);
+            if (UU == null)
                 return NotFound();
-            return user;
+            return await _users.Get<UserVM>(id);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            var user = _users.Get(id);
-            if (user == null)
-                return NotFound();
-            _users.Delete(id);
-            return Ok();
+        public async Task Delete(int id)
+        {   
+           await _users.Delete(id);
         }
         [HttpPost]
-        public ActionResult Create(Users user)
+        public async Task Create(UserVM userVM)
         {
-
-            _users.Add(user);
-            return Ok();
+            var us= _mapper.Map<Users>(userVM);
+            await _users.Add(us);
 
         }
         [HttpPut]
-        public ActionResult Update(Users user)
+        public async Task Update(int id,UserVM user)
         {
-            var _user = _users.Get(user.Id);
-            if (_user == null)
-                return NotFound();
-            _users.Update(user);
-            return Ok();
+                await _users.Update(_mapper.Map<Users>(user));
         }
     }
 }

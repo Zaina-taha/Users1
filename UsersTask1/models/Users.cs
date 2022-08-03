@@ -1,9 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
-using UserTask1.Repo;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
+using UsersTask1.Repo;
 
 namespace UserTask1.Module
 {
-    public class Users : BaseModel
+    public class Users :IdentityUser<int>, IBaseModel
     {
 
         public string FisrtName { get; set; }

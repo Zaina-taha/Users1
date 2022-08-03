@@ -1,63 +1,62 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using UsersTask1.Extensions;
+using UsersTask1.models;
 using UserTask1.Module;
 using UserTask1.Repo;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Authorization;
-using UsersTask1;
 
 namespace UserTask1.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class PostsController : ControllerBase
     {
-       
-
+        private readonly IMapper _mapper;
         public IPosts _posts;
-        public PostsController(IPosts posts)
+        public PostsController(IPosts posts, IMapper mapper)
         {
+            _mapper = mapper;
             _posts = posts;
         }
+
+
         [HttpGet]
-        public ActionResult<List<Posts>> GetALL()
+       // [XSampleActionFilter]
+        public async Task<ActionResult<List<PostsVM>>> GetALL()
         {
-            return _posts.GetAll();
+            return await _posts.GetAll<PostsVM>();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Posts> Get(int id)
+        public async Task <ActionResult<PostsVM>> Get(int id) 
         {
-            var posts = _posts.Get(id);
-            if (posts == null)
+            var UU = _posts.Get<PostsVM>(id);
+            if (UU == null)
                 return NotFound();
-            return posts;
+            return await _posts.Get<PostsVM>(id);
         }
 
         [HttpDelete("{id}")]
-        public ActionResult Delete(int id)
-        {
-            var posts = _posts.Get(id);
-            if (posts == null)
-                return NotFound();
-            _posts.Delete(id);
-            return Ok();
-        }
-        [HttpPost]
-        public ActionResult Create(Posts posts)
+        public async Task Delete(int id)
         {
 
-            _posts.Add(posts);
-            return Ok();
+            await _posts.Delete(id);
+        }
+        [HttpPost]
+        public async  Task Create(PostsVM postsvm)
+        {
+            var use = _mapper.Map<Posts>(postsvm);
+            await _posts.Add(use);
 
         }
         [HttpPut]
-        public ActionResult Update(Posts posts)
+        public async Task Update(PostsVM posts)
         {
-            var _post = _posts.Get(posts.Id);
-            if (_post == null)
-                return NotFound();
-            _posts.Update(posts);
-            return Ok();
+            await _posts.Update(_mapper.Map<Posts>(posts));
         }
     }
 }
