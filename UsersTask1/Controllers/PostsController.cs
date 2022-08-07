@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using UsersTask1.Extensions;
+using System.Security.Claims;
 using UsersTask1.models;
 using UserTask1.Module;
 using UserTask1.Repo;
@@ -50,6 +51,10 @@ namespace UserTask1.Controllers
         public async  Task Create(PostsVM postsvm)
         {
             var use = _mapper.Map<Posts>(postsvm);
+            var idClaim = User.Claims.FirstOrDefault(x => x.Type.Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+            var id_u = idClaim?.Value;
+            use.Id = Convert.ToInt32(id_u);
+            
             await _posts.Add(use);
 
         }

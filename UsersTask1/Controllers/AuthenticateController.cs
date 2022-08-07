@@ -32,6 +32,8 @@ namespace UsersTask1.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
+           
+
             var user = await _userManager.FindByNameAsync(model.Username);
             if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
             {
@@ -39,7 +41,9 @@ namespace UsersTask1.Controllers
 
                 var authClaims = new List<Claim>
                 {
+
                     new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim("UserId", user.Id.ToString()),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 };
 
