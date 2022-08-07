@@ -25,6 +25,13 @@ namespace UserTask1.Repo
             return _context.Users.ProjectTo<TVM>(_mapper.ConfigurationProvider).FirstOrDefaultAsync(c => c.Id == id);
         }
 
+        public async Task<List<Posts>> Search(int Page, int Size, string search)
+        {
+           return _context.Posts.Skip(Page*Size).Take(Size).
+                Where(x=>x.Title.Contains(search)).ToList();
+
+        }
+
 
 
 

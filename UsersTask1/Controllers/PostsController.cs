@@ -26,10 +26,16 @@ namespace UserTask1.Controllers
 
 
         [HttpGet]
-       // [XSampleActionFilter]
+        // [XSampleActionFilter]
         public async Task<ActionResult<List<PostsVM>>> GetALL()
         {
             return await _posts.GetAll<PostsVM>();
+        }
+        [HttpGet("search")]
+     
+        public async Task<ActionResult<List<Posts>>> Search(int Page, int Size, string search)
+        {
+            return await _posts.Search(Page,Size,search);
         }
 
         [HttpGet("{id}")]
