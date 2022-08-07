@@ -59,15 +59,17 @@ namespace UserTask1.Controllers
             var use = _mapper.Map<Posts>(postsvm);
             var idClaim = User.Claims.FirstOrDefault(x => x.Type.Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
             var id_u = idClaim?.Value;
-            use.Id = Convert.ToInt32(id_u);
+            use.UserId = Convert.ToInt32(id_u);
             
-            await _posts.Add(use);
+            await _posts.Add(use, Convert.ToInt32(id_u));
 
         }
         [HttpPut]
         public async Task Update(PostsVM posts)
         {
-            await _posts.Update(_mapper.Map<Posts>(posts));
+            var idClaim = User.Claims.FirstOrDefault(x => x.Type.Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+            var id_u = idClaim?.Value;
+            await _posts.Update(_mapper.Map<Posts>(posts), Convert.ToInt32(id_u));
         }
     }
 }

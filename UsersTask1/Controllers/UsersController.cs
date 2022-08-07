@@ -49,13 +49,17 @@ namespace UserTask1.Controllers
         public async Task Create(UserVM userVM)
         {
             var us= _mapper.Map<Users>(userVM);
-            await _users.Add(us);
+            var idClaim = User.Claims.FirstOrDefault(x => x.Type.Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+            var id_u = idClaim?.Value;
+            await _users.Add(us, Convert.ToInt32(id_u));
 
         }
         [HttpPut]
         public async Task Update(int id,UserVM user)
         {
-                await _users.Update(_mapper.Map<Users>(user));
+            var idClaim = User.Claims.FirstOrDefault(x => x.Type.Equals("UserId", StringComparison.InvariantCultureIgnoreCase));
+            var id_u = idClaim?.Value;
+            await _users.Update(_mapper.Map<Users>(user), Convert.ToInt32(id_u));
         }
     }
 }

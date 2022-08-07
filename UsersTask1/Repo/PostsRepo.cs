@@ -27,7 +27,7 @@ namespace UserTask1.Repo
 
         public async Task<List<Posts>> Search(int Page, int Size, string search)
         {
-           return _context.Posts.Skip(Page*Size).Take(Size).
+           return _context.Posts.Where(x => x.Title.Contains(search)).Skip(Page*Size).Take(Size).
                 Where(x=>x.Title.Contains(search)).ToList();
 
         }

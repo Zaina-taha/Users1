@@ -12,8 +12,8 @@ using UserTask1.Module;
 namespace UsersTask1.Migrations
 {
     [DbContext(typeof(UsersContext))]
-    [Migration("20220803164030_Init")]
-    partial class Init
+    [Migration("20220807111437_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -165,16 +165,28 @@ namespace UsersTask1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("CrById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreateDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("usersId")
+                    b.Property<int>("UpById")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("usersId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Posts");
                 });
@@ -310,7 +322,9 @@ namespace UsersTask1.Migrations
                 {
                     b.HasOne("UserTask1.Module.Users", "users")
                         .WithMany("Posts")
-                        .HasForeignKey("usersId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("users");
                 });
